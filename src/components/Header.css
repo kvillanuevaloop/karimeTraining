@@ -1,0 +1,14 @@
+.component-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+    background-color: cadetblue;
+  }
+
+  .component-button {
+    height: 30px;
+    background-color: rgb(222, 227, 227);
+    border-radius: 5px;
+    margin: 5px;
+  }
