@@ -14,7 +14,7 @@ export default function Header() {
     <div className="component-header">
       <p>Trello:</p>
       {boards.map((board) => (
-        <BoardTitle id={board.id} title={board.title}/>
+        <BoardTitle key={board.id} id={board.id} title={board.title}/>
       ))}
       <input type="text" placeholder="Title" onChange={event => setTitle(event.target.value)}/>
       <button
