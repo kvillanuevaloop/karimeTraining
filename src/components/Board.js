@@ -10,7 +10,7 @@ export default function Board() {
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
 
-  const [{isOver}, drop] = useDrop( () => ({
+  const [, drop] = useDrop( () => ({
     accept: ["board", "column", "card"],
     drop: (item) => {
       item.type === 'BOARD' ? deleteBoardFunc(item.id) : 
@@ -30,7 +30,7 @@ export default function Board() {
     <>
     <div className="component-board">
       {columns.map((column) => (
-        <div key={column.id}>
+        <div key={column.id} >
           <Column column={column} />
         </div>
       ))}

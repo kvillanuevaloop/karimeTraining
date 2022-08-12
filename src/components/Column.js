@@ -1,33 +1,74 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { addCard } from "../reducers/boardSlice";
-import { useDrag } from "react-dnd";
+import { addCard, changeColumnTitle, moveCard } from "../reducers/boardSlice";
+import { useDrag, useDrop } from "react-dnd";
 import Card from "./Card";
 import "./Column.css"
 
 export default function Column (props) {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const [{isDragging}, drag ] = useDrag(()=>({
-        type: "column",
-        item: {id: props.column.id, type: 'COLUMN'},
-        collect: (monitor)=>({
-            isDragging: !!monitor.isDragging(),
-        })
-    }))
+  const [, drag] = useDrag(() => ({
+    type: "column",
+    item: { id: props.column.id, type: "COLUMN" },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
 
-    return(
-        <div className="component-column" key={props.column.id} ref={drag} >
-            <div className="text-row">
-                <p className="column-text">{props.column.title}</p>
-                <button className="plus-button" onClick={()=>{dispatch(addCard(props.column.id))}}>+</button>
-            </div>
-            {props.column.cards.map((element) => (
-                <div key={element.id}>
-                    <Card element={element} column={props.column} />
-                </div>
-            ))}
-        </div>
+  const [, drop] = useDrop(() => ({
+    accept: "card",
+    drop: (item, monitor) => {
+      item.type === "CARD" &&
+        moveCardFunc({ idCard: item.idCard, idColumn: item.idColumn, y:monitor.getClientOffset().y })
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
+
+  const moveCardFunc = ({ idCard, idColumn, y }) => {
+    dispatch(
+      moveCard({
+        idCard: idCard,
+        idColumn: idColumn,
+        newIdColumn: props.column.id,
+        y,
+      })
     );
-    
+  };
+
+  return (
+    <div className="component-column" ref={drop}>
+      <div ref={drag}>
+        <div className="text-row">
+          <input
+            className="column-text"
+            value={props.column.title}
+            onChange={(event) =>
+              dispatch(
+                changeColumnTitle({
+                  id: props.column.id,
+                  newTitle: event.target.value,
+                })
+              )
+            }
+          />
+          <button
+            className="plus-button"
+            onClick={() => {
+              dispatch(addCard(props.column.id));
+            }}
+          >
+            +
+          </button>
+        </div>
+        {props.column.cards.map((element) => (
+          <div key={element.id}>
+            <Card element={element} column={props.column} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
