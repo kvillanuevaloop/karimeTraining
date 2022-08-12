@@ -1,7 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { addCard, changeCardTitle  } from "../reducers/boardSlice";
+import { addCard } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
+import Card from "./Card";
 import "./Column.css"
 
 export default function Column (props) {
@@ -22,11 +23,8 @@ export default function Column (props) {
                 <button className="plus-button" onClick={()=>{dispatch(addCard(props.column.id))}}>+</button>
             </div>
             {props.column.cards.map((element) => (
-                <div className="card-box" key={element.id}>
-                    <input className="card-input"
-                    value={element.title} 
-                    onChange={(event) => dispatch(changeCardTitle({columnId: props.column.id, cardId: element.id, newTitle: event.target.value}))}
-                    />
+                <div key={element.id}>
+                    <Card element={element} column={props.column} />
                 </div>
             ))}
         </div>

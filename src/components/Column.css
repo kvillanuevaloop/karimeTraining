@@ -2,8 +2,8 @@
   flex-direction: column;
   align-items: center;
   display: flex;
-  min-width: 250px;
-  min-height: 400px;
+  width: 250px;
+  height: 100%;
   border-radius: 20px;
   margin: 5px;
   background-color: rgb(230, 230, 230);
@@ -32,16 +32,4 @@
   height: 24px;
   width: 24px;
   text-align: center;
-}
-
-.card-box {
-  background-color: beige;
-  height: 70px;
-  width: 200px;
-  margin: 5px 0 5px 0;
-}
-
-.card-input {
-  background-color: beige;
-  border-width: 0px;
 }
