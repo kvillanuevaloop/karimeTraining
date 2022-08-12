@@ -28,7 +28,7 @@ export default function Board() {
     <div className="component-board">
       {columns.map((column) => (
         <div key={column.id}>
-          <Column id={column.id} title={column.title}/>
+          <Column column={column} />
         </div>
       ))}
       <div className="component-column button-add">

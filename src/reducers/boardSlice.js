@@ -7,6 +7,7 @@ export const boardSlice = createSlice({
     currentBoard: 0,
     idBoard: -1,
     idColumn: -1,
+    idCard: -1,
   },
   reducers: {
     addBoard: (state, action) => {
@@ -15,7 +16,7 @@ export const boardSlice = createSlice({
     },
     addColumn: (state, action) => {
       state.idColumn += 1;
-      state.list[state.currentBoard].columns.push({id: state.idColumn, title: action.payload});
+      state.list[state.currentBoard].columns.push({id: state.idColumn, title: action.payload, cards: []});
     },
     changeBoard: (state, action) => {
       state.currentBoard = action.payload;
@@ -29,10 +30,21 @@ export const boardSlice = createSlice({
       const element = state.list[state.currentBoard].columns.find((element)=> element.id === action.payload);
       state.list[state.currentBoard].columns = state.list[state.currentBoard].columns.filter((item) => item !== element);
     },
+    addCard: (state, action) => {
+      state.idCard += 1;
+      const index = state.list[state.currentBoard].columns.map(element => element.id).indexOf(action.payload);
+      state.list[state.currentBoard].columns[index].cards.push({id: state.idCard,title: 'Nueva card'})
+    },
+    changeCardTitle: (state, action) => {
+      console.log(action.payload)
+      const column = state.list[state.currentBoard].columns[action.payload.columnId];
+      const cardIndex = column.cards.map(element => element.id).indexOf(action.payload.cardId);
+      column.cards[cardIndex].title = action.payload.newTitle;
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { addBoard, addColumn, changeBoard , deleteBoard, deleteColumn} = boardSlice.actions
+export const { addBoard, addColumn, changeBoard , deleteBoard, deleteColumn, addCard, changeCardTitle} = boardSlice.actions
 
 export default boardSlice.reducer

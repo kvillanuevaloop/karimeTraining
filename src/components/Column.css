@@ -11,9 +11,37 @@
 }
 
 .column-text {
-  border-radius: 5px;
-  height: 30px;
-  margin: 10px;
+  margin: 0 10px 0 0;
   flex: 1;
   text-align: center;
+}
+
+.text-row {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.plus-button {
+  border-color: rgb(0, 0, 0);
+  border-width: 1px;
+  border-radius: 12px;
+  height: 24px;
+  width: 24px;
+  text-align: center;
+}
+
+.card-box {
+  background-color: beige;
+  height: 70px;
+  width: 200px;
+  margin: 5px 0 5px 0;
+}
+
+.card-input {
+  background-color: beige;
+  border-width: 0px;
 }
