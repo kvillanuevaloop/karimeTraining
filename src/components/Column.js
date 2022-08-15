@@ -1,12 +1,21 @@
 import React from "react";
+import { useDrag } from "react-dnd";
 import "./Column.css"
 
-export default class Column extends React.Component {
-    render() {
-        return(
-            <div className="column-title" key={this.props.id}>
-                <p className="column-text">{this.props.title}</p>
-            </div>
-        );
-    }
+export default function Column (props) {
+    
+    const [{isDragging}, drag ] = useDrag(()=>({
+        type: "column",
+        item: {id: props.id, type: 'COLUMN'},
+        collect: (monitor)=>({
+            isDragging: !!monitor.isDragging(),
+        })
+    }))
+
+    return(
+        <div className="component-column" key={props.id} ref={drag} >
+            <p className="column-text">{props.title}</p>
+        </div>
+    );
+    
 }

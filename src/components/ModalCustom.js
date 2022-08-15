@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -16,13 +15,9 @@ const customStyles = {
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#yourAppElement');
 
-function ModalCustom() {
+function ModalCustom(props) {
   let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
+  const [modalIsOpen, setIsOpen] = React.useState(props.isOpen);
 
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
@@ -35,7 +30,6 @@ function ModalCustom() {
 
   return (
     <div>
-      <button onClick={openModal}>Open Modal</button>
       <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}

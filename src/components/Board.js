@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addColumn } from "../reducers/boardSlice";
+import { addColumn, deleteBoard, deleteColumn } from "../reducers/boardSlice";
 import Column from "../components/Column";
+import { useDrop } from "react-dnd";
 import "./Board.css"
 
 export default function Board() {
@@ -9,11 +10,25 @@ export default function Board() {
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
 
+  const [{isOver}, drop] = useDrop( () => ({
+    accept: ["board", "column"],
+    drop: (item) => {
+      item.type === 'BOARD' ? deleteBoardFunc(item.id) : deleteColumnFunc(item.id)
+    },
+    collect: (monitor)=>({
+      isOver: !!monitor.isOver(),
+  })
+  }))
+
+  const deleteBoardFunc = (id) => {dispatch(deleteBoard(id))};
+  const deleteColumnFunc = (id) => {dispatch(deleteColumn(id))};
+
   return (
+    <>
     <div className="component-board">
       {columns.map((column) => (
-        <div className="component-column">
-            <Column key={column.id} title={column.title}/>
+        <div key={column.id}>
+          <Column id={column.id} title={column.title}/>
         </div>
       ))}
       <div className="component-column button-add">
@@ -30,5 +45,7 @@ export default function Board() {
         </button>
       </div>
     </div>
+    <button className="button-delete" ref={drop}>Delete</button>
+    </>
   );
 }
