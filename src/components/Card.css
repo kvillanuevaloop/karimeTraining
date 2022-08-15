@@ -1,0 +1,11 @@
+.card-box {
+    background-color: beige;
+    height: 70px;
+    width: 200px;
+    margin: 5px 0 5px 0;
+}
+  
+.card-input {
+    background-color: beige;
+    border-width: 0px;
+}

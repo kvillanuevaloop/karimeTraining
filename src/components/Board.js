@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addColumn, deleteBoard, deleteColumn } from "../reducers/boardSlice";
+import { addColumn, deleteBoard, deleteColumn, deleteCard } from "../reducers/boardSlice";
 import Column from "../components/Column";
 import { useDrop } from "react-dnd";
 import "./Board.css"
@@ -11,9 +11,11 @@ export default function Board() {
   const [title, setTitle] = useState('');
 
   const [{isOver}, drop] = useDrop( () => ({
-    accept: ["board", "column"],
+    accept: ["board", "column", "card"],
     drop: (item) => {
-      item.type === 'BOARD' ? deleteBoardFunc(item.id) : deleteColumnFunc(item.id)
+      item.type === 'BOARD' ? deleteBoardFunc(item.id) : 
+      (item.type === 'COLUMN' ? deleteColumnFunc(item.id) : 
+      deleteCardFunc({idCard: item.idCard, idColumn: item.idColumn})) 
     },
     collect: (monitor)=>({
       isOver: !!monitor.isOver(),
@@ -22,13 +24,14 @@ export default function Board() {
 
   const deleteBoardFunc = (id) => {dispatch(deleteBoard(id))};
   const deleteColumnFunc = (id) => {dispatch(deleteColumn(id))};
+  const deleteCardFunc = ({idCard,idColumn}) => {dispatch(deleteCard({idCard: idCard,idColumn: idColumn}))};
 
   return (
     <>
     <div className="component-board">
       {columns.map((column) => (
         <div key={column.id}>
-          <Column id={column.id} title={column.title}/>
+          <Column column={column} />
         </div>
       ))}
       <div className="component-column button-add">
