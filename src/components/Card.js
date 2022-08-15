@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 import { changeCardTitle } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
 import "./Card.css";
+import Types from "../utils";
 
 export default function Card(props) {
   const dispatch = useDispatch();
 
   const [, drag] = useDrag(() => ({
-    type: "card",
-    item: { idColumn: props.column.id, idCard: props.element.id, type: "CARD" },
+    type: Types.cards,
+    item: { idColumn: props.column.id, idCard: props.element.id, type: Types.cards},
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

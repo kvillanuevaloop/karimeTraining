@@ -3,13 +3,14 @@ import { useDispatch } from "react-redux";
 import { changeBoard } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
 import "./BoardTitle.css"
+import Types from "../utils"
 
 const BoardTitle = (props) => {
         const dispatch = useDispatch();
 
-        const [{isDragging}, drag ] = useDrag(()=>({
-            type: "board",
-            item: {id: props.id, type: 'BOARD'},
+        const [, drag ] = useDrag(()=>({
+            type: Types.board,
+            item: {id: props.id, type: Types.board},
             collect: (monitor)=>({
                 isDragging: !!monitor.isDragging(),
             })

@@ -3,19 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { addColumn, deleteBoard, deleteColumn, deleteCard } from "../reducers/boardSlice";
 import Column from "../components/Column";
 import { useDrop } from "react-dnd";
-import "./Board.css"
+import "./Board.css";
+import Types from "../utils/";
 
 export default function Board() {
-  const columns = useSelector((state) => state.boards.list[state.boards.currentBoard].columns);
+  const columns = useSelector((state) => state.boards.list.find((element) => element.id === state.boards.currentBoardId).columns);
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
 
   const [, drop] = useDrop( () => ({
-    accept: ["board", "column", "card"],
+    accept: [Types.board, Types.columns, Types.cards],
     drop: (item) => {
-      item.type === 'BOARD' ? deleteBoardFunc(item.id) : 
-      (item.type === 'COLUMN' ? deleteColumnFunc(item.id) : 
-      deleteCardFunc({idCard: item.idCard, idColumn: item.idColumn})) 
+        switch (item.type) {
+            case Types.board:
+                return deleteBoardFunc(item.id);
+            case Types.columns :
+                return deleteColumnFunc(item.id);
+            default:
+                return deleteCardFunc({idCard: item.idCard, idColumn: item.idColumn});
+        }
     },
     collect: (monitor)=>({
       isOver: !!monitor.isOver(),
@@ -25,6 +31,7 @@ export default function Board() {
   const deleteBoardFunc = (id) => {dispatch(deleteBoard(id))};
   const deleteColumnFunc = (id) => {dispatch(deleteColumn(id))};
   const deleteCardFunc = ({idCard,idColumn}) => {dispatch(deleteCard({idCard: idCard,idColumn: idColumn}))};
+
 
   return (
     <>

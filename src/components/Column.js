@@ -4,22 +4,23 @@ import { addCard, changeColumnTitle, moveCard } from "../reducers/boardSlice";
 import { useDrag, useDrop } from "react-dnd";
 import Card from "./Card";
 import "./Column.css"
+import Types from "../utils"
 
 export default function Column (props) {
   const dispatch = useDispatch();
 
   const [, drag] = useDrag(() => ({
-    type: "column",
-    item: { id: props.column.id, type: "COLUMN" },
+    type: Types.columns,
+    item: { id: props.column.id, type: Types.columns },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
 
   const [, drop] = useDrop(() => ({
-    accept: "card",
+    accept: Types.cards,
     drop: (item, monitor) => {
-      item.type === "CARD" &&
+      item.type === Types.cards &&
         moveCardFunc({ idCard: item.idCard, idColumn: item.idColumn, y:monitor.getClientOffset().y })
     },
     collect: (monitor) => ({
@@ -39,8 +40,8 @@ export default function Column (props) {
   };
 
   return (
-    <div className="component-column" ref={drop}>
-      <div ref={drag}>
+    <div className="component-column" ref={drag}>
+      <div className="component-drop" ref={drop}>
         <div className="text-row">
           <input
             className="column-text"
