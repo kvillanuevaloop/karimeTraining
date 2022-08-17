@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addBoard } from "../reducers/boardSlice";
 import BoardTitle from "./BoardTitle";
 //import Modal from 'react-modal';
-import "./Header.css";
+import "./Header.scss";
 
 export default function Header() {
   const boards = useSelector((state) => state.boards.list);

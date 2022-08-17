@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { addCard, changeColumnTitle, moveCard } from "../reducers/boardSlice";
 import { useDrag, useDrop } from "react-dnd";
 import Card from "./Card";
-import "./Column.css"
+import "./Column.scss"
 import Types from "../utils"
 
 export default function Column (props) {

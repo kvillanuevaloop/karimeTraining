@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { changeCardTitle } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
-import "./Card.css";
+import "./Card.scss";
 import Types from "../utils";
 
 export default function Card(props) {

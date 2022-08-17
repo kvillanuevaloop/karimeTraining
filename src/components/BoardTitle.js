@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { changeBoard } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
-import "./BoardTitle.css"
+import "./BoardTitle.scss"
 import Types from "../utils"
 
 const BoardTitle = (props) => {
