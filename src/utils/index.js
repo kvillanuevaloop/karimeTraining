@@ -1,7 +1,7 @@
 export const Types = {
-    columns : 'COLUMNS',
-    board: 'BOARD',
-    cards: 'CARDS',
+    columns : 'column',
+    board: 'board',
+    cards: 'card',
 };
 
 export default Types;
