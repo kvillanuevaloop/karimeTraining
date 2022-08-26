@@ -3,14 +3,14 @@ const baseURL = 'https://62fed980a85c52ee483d6943.mockapi.io/api/v1';
 
 export async function postCards(boardId,columnId, title) {
   const newTitle = title ? title : "New Card";
-    const response = await axios
-      .post(`${baseURL}/boards/${boardId}/columns/${columnId}/cards`, {
-        title: newTitle,
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    return response.data;
+  const response = await axios
+    .post(`${baseURL}/boards/${boardId}/columns/${columnId}/cards`, {
+      title: newTitle,
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response.data;
 }
 
 export async function putCard(boardId,columnId,cardId,title) {
