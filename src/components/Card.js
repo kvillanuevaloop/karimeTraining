@@ -1,11 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeCardTitle } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
+import api from '../api';
 import "./Card.scss";
 import Types from "../utils";
 
 export default function Card(props) {
+  const currentBoardId = useSelector((state) => state.boards.currentBoardId);
   const dispatch = useDispatch();
 
   const [, drag] = useDrag(() => ({
@@ -22,7 +24,13 @@ export default function Card(props) {
       <input
         className="card-input"
         value={props.element.title}
-        onChange={(event) =>
+        onChange={(event) => {
+          api.CARDS.put(
+            currentBoardId,
+            props.column.id,
+            props.element.id,
+            event.target.value
+          );
           dispatch(
             changeCardTitle({
               columnId: props.column.id,
@@ -30,7 +38,7 @@ export default function Card(props) {
               newTitle: event.target.value,
             })
           )
-        }
+        }}
       />
     </div>
   );

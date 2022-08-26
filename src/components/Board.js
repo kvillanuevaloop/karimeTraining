@@ -1,11 +1,12 @@
-import React, {useState} from "react";
+import React, { useState, useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addColumn, deleteBoard, deleteColumn, deleteCard } from "../reducers/boardSlice";
-import Column from "../components/Column";
+import { addColumn, deleteBoard, deleteColumn, deleteCard, addInitialColumns } from "../reducers/boardSlice";
 import { useDrop } from "react-dnd";
+import api from '../api';
+import Column from "../components/Column";
 import Modal from 'react-modal';
-import "./Board.scss";
 import Types from "../utils/";
+import "./Board.scss";
 
 Modal.setAppElement(document.getElementById('root'));
 
@@ -21,11 +22,12 @@ const customStyles = {
 };
 
 export default function Board() {
-  const columns = useSelector((state) => state.boards.list.find((element) => element.id === state.boards.currentBoardId).columns);
+  const currentBoardId = useSelector((state) => state.boards.currentBoardId);
+  const columns = useSelector((state) => state.boards.list[state.boards.list.map((element) => element.id).indexOf(state.boards.currentBoardId)].columns);
   const dispatch = useDispatch();
   const [title, setTitle] = useState('');
   const [modalItem, setItem] = useState(null);
-
+  
   const [, drop] = useDrop( () => ({
     accept: [Types.board, Types.columns, Types.cards],
     drop: (item) => {
@@ -36,15 +38,18 @@ export default function Board() {
   })
   }))
 
-  function performAction() {
+  const performAction = async () => {
     switch (modalItem.type) {
       case Types.board:
+          await api.BOARDS.delete(modalItem.id);
           deleteBoardFunc(modalItem.id);
           break;
       case Types.columns :
+          await api.COLUMNS.delete(currentBoardId, modalItem.id);
           deleteColumnFunc(modalItem.id);
           break;
       default:
+          await api.CARDS.delete(currentBoardId, modalItem.idColumn, modalItem.idCard)
           deleteCardFunc({
             idCard: modalItem.idCard,
             idColumn: modalItem.idColumn,
@@ -60,6 +65,14 @@ export default function Board() {
   function closeModal() {
     setItem(null);
   }
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      const result = await api.COLUMNS.get(currentBoardId);
+      dispatch(addInitialColumns(result));
+    };
+    fetchData();
+  },[currentBoardId, dispatch]);
 
   return (
     <>
@@ -79,8 +92,9 @@ export default function Board() {
           />
           <button
             className="create-button"
-            onClick={() => {
-              dispatch(addColumn(title));
+            onClick={async () => {
+              const newColumn = await api.COLUMNS.post(currentBoardId,title);
+              dispatch(addColumn(newColumn));
               setTitle("");
             }}
             disabled={title === ""}
@@ -88,6 +102,7 @@ export default function Board() {
             Create Column
           </button>
         </div>
+
       </div>
       <button className="button-delete" ref={drop}>
         Delete
