@@ -3,6 +3,7 @@
   flex-direction: column;
   display: flex;
   height: 100vh;
+  min-width: fit-content;
 }
 
 .App-logo {

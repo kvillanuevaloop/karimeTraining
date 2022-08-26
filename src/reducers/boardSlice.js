@@ -7,78 +7,86 @@ export const boardSlice = createSlice({
   initialState: {
     list: [],
     currentBoardId: 0,
-    idBoard: -1,
-    idColumn: -1,
-    idCard: -1,
   },
   reducers: {
     addBoard: (state, action) => {
-      state.idBoard += 1;
       state.list.push({
-        id: state.idBoard,
-        title: action.payload,
+        id: action.payload.id,
+        title: action.payload.title,
         columns: [],
       });
     },
+    addInitialBoards: (state, action) => {
+      action.payload.forEach(element => {
+        state.list.push({
+          id: element.id,
+          title: element.title,
+          columns: element.columns,
+        });
+      });
+      state.currentBoardId = state.list[0].id;
+    },
     addColumn: (state, action) => {
-      state.idColumn += 1;
       state.list[indexBoard(state)].columns.push({
-        id: state.idColumn,
-        title: action.payload,
+        id: action.payload.id,
+        title: action.payload.title,
         cards: [],
+      });
+    },
+    addInitialColumns: (state, action) => {
+      state.list[indexBoard(state)].columns = [];
+      action.payload.forEach(element => {
+        state.list[indexBoard(state)].columns.push({
+          id: element.id,
+          title: element.title,
+          cards: element.cards,
+        });
       });
     },
     changeBoard: (state, action) => {
       state.currentBoardId = action.payload;
     },
     deleteBoard: (state, action) => {
-      const element = state.list.find(
-        (element) => element.id === action.payload
-      );
-      state.list = state.list.filter((item) => item !== element);
-      state.currentBoardId = 0;
+      state.list = state.list.filter((item) => item.id !== action.payload);
+      if (state.list[0]) {
+        state.currentBoardId = state.list[0].id;
+      } else state.currentBoardId = -1;
     },
     deleteColumn: (state, action) => {
-      const element = state.list[indexBoard(state)].columns.find(
-        (element) => element.id === action.payload
-      );
       state.list[indexBoard(state)].columns = state.list[
-        state.currentBoardId
-      ].columns.filter((item) => item !== element);
+        indexBoard(state)
+      ].columns.filter((item) => item.id !== action.payload);
     },
     addCard: (state, action) => {
-      state.idCard += 1;
-      const columns = state.list[indexBoard(state)].columns;
-      const index = columns
+      const index = state.list[indexBoard(state)].columns
         .map((element) => element.id)
-        .indexOf(action.payload);
-      columns[index].cards.push({ id: state.idCard, title: "Nueva card" });
+        .indexOf(action.payload.columnId);
+        state.list[indexBoard(state)].columns[index].cards.push(action.payload);
     },
     changeCardTitle: (state, action) => {
-      const column =
-        state.list[indexBoard(state)].columns[action.payload.columnId];
-      const cardIndex = column.cards
+      const columnIndex = state.list[indexBoard(state)].columns.map((element) => element.id)
+      .indexOf(action.payload.columnId);
+      const cardIndex = state.list[indexBoard(state)].columns[columnIndex].cards
         .map((element) => element.id)
         .indexOf(action.payload.cardId);
-      column.cards[cardIndex].title = action.payload.newTitle;
+        state.list[indexBoard(state)].columns[columnIndex].cards[cardIndex].title = action.payload.newTitle;
     },
     deleteCard: (state, action) => {
-      const element = state.list[indexBoard(state)].columns.find((element) => element.id === action.payload.idColumn).cards.find((element) => element.id === action.payload.idCard);
       state.list[indexBoard(state)].columns.find((element) => element.id === action.payload.idColumn).cards =
-        state.list[indexBoard(state)].columns.find((element) => element.id === action.payload.idColumn).cards.filter((item) => item !== element);
+        state.list[indexBoard(state)].columns.find((element) => element.id === action.payload.idColumn).cards.filter((item) => item.id !== action.payload.idCard);
     },
     changeColumnTitle: (state, action) => {
       const columns = state.list[indexBoard(state)].columns;
-      const cardIndex = columns
+      const columnIndex = columns
         .map((element) => element.id)
         .indexOf(action.payload.id);
-      columns[cardIndex].title = action.payload.newTitle;
+      columns[columnIndex].title = action.payload.newTitle;
     },
     moveCard: (state, action) => {
       const columns = state.list[indexBoard(state)].columns;
       const cardToMove = columns.find((element) => element.id === action.payload.idColumn).cards.find((element) => element.id === action.payload.idCard);
       state.list[indexBoard(state)].columns.find((element) => element.id === action.payload.idColumn).cards = columns.find((element) => element.id === action.payload.idColumn).cards.filter((element) => element.id !== cardToMove.id);
-      const arrayPosition = Math.floor((action.payload.y - 150) / (75)) + 1;
+      const arrayPosition = Math.floor((action.payload.y - 170) / (80)) + 1;
       const index =
         action.payload.y < 150
           ? 0
@@ -102,6 +110,8 @@ export const {
   deleteCard,
   changeColumnTitle,
   moveCard,
+  addInitialBoards,
+  addInitialColumns,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;
