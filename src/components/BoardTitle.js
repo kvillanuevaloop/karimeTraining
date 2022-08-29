@@ -1,11 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeBoard } from "../reducers/boardSlice";
 import { useDrag } from "react-dnd";
 import "./BoardTitle.scss"
 import Types from "../utils"
 
 const BoardTitle = (props) => {
+    const currentBoardId = useSelector((state) => state.boards.currentBoardId);
+    const styleCurrentBoard = currentBoardId === props.id ? {backgroundColor: 'yellow'} : {}
         const dispatch = useDispatch();
 
         const [, drag ] = useDrag(()=>({
@@ -17,7 +19,7 @@ const BoardTitle = (props) => {
         }))
 
         return(
-            <button className="component-title"
+            <button className="component-title" style={styleCurrentBoard}
                 ref={drag} 
                 onClick={()=>{dispatch(changeBoard(props.id))}} 
                 >
