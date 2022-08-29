@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-const baseURL = 'https://62fed980a85c52ee483d6943.mockapi.io/api/v1';
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 export async function getColumn(boardId) {
     const response = await axios.get(`${baseURL}/boards/${boardId}/columns`, {
